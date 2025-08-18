@@ -13,4 +13,8 @@ class Produto(models.Model):
     localizacao = models.CharField('Localização',  max_length=100, null=True)
     statusMotor = models.IntegerField('Status Motor', max_length=100, null=True)
     imagem = models.CharField('Imagem',  max_length=100, null=True)
-# Create your models here.
+
+class Monitoriamento(models.Model):
+dataHora = models.DateTimeField('Data e Hora', auto_now_add=True)
+status_motor = models.CharField('Status do Motor', max_length=20, choices=StatusMotor.choices, default=StatusMotor.DESLIGADO,)
+mensagem = models.CharField('Mensagem', max_length=100, null=True)
