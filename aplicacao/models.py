@@ -16,5 +16,5 @@ class Produto(models.Model):
 
 class Monitoriamento(models.Model):
 dataHora = models.DateTimeField('Data e Hora', auto_now_add=True)
-status_motor = models.CharField('Status do Motor', max_length=20, choices=StatusMotor.choices, default=StatusMotor.DESLIGADO,)
+statusMotor = models.CharField('Status do Motor', max_length=20, choices=StatusMotor.choices, default=StatusMotor.DESLIGADO,)
 mensagem = models.CharField('Mensagem', max_length=100, null=True)
