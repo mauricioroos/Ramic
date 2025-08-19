@@ -115,4 +115,4 @@ def popular_monitoriamento():
 if __name__ == "__main__":
     popular_produtos()
     popular_monitoriamento()
-    print("✅ Banco populado com sucesso!")
+    print(":) Banco populado com sucesso!")
