@@ -1,0 +1,22 @@
+
+{% extends "core/base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-5">
+    <h3 class="text-center mb-1">Criar Conta</h3>
+    <p class="text-center text-muted mb-3">Insira seu e-mail para se inscrever neste aplicativo</p>
+    <form method="post" class="card card-body shadow-sm">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button class="btn btn-dark w-100 btn-pill">Inscreva-se com e-mail</button>
+      <div class="text-center mt-3">
+        <button type="button" class="btn btn-light w-100 btn-pill" disabled>Google</button>
+      </div>
+      <div class="text-center mt-3 small text-muted">
+        <a href="#">Termos de Serviço</a> • <a href="#">Política de Privacidade</a>
+      </div>
+    </form>
+    <p class="text-center mt-3 mb-0">Já tem conta? <a href="{% url 'login' %}">Entrar</a></p>
+  </div>
+</div>
+{% endblock %}

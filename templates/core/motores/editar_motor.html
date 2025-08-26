@@ -1,0 +1,18 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<h3 class="mb-3">Editando Motor: {{ motor.nome }}</h3>
+
+<div class="card card-body">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    {{ form.as_p }}
+
+    <div class="d-flex justify-content-end gap-2 mt-3">
+      <a href="{% url 'painel' %}" class="btn btn-secondary">Cancelar</a>
+      <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

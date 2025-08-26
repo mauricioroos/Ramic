@@ -1,0 +1,85 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8">
+    <title>RAMIC</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+      body { background-color: #f8f9fa; }
+      .sidebar { 
+        width: 240px; 
+        min-height: 100vh; 
+        background: #fff; 
+        border-right: 1px solid #dee2e6; 
+        position: fixed; 
+        left: 0; 
+        top: 0; 
+        padding: 24px 16px; 
+      }
+      .content { 
+        margin-left: 240px; 
+        padding: 24px; 
+      }
+      .ramic-card-img { 
+        height: 180px; 
+        object-fit: contain; 
+        padding: 8px;        
+      }
+    </style>
+    <div class="d-flex justify-content-end align-items-center p-2 bg-dark text-white">
+      <span>👤 {{ request.user.username }}</span>
+      <span id="datetime" class="ms-3"></span>
+    </div>
+    
+    <script>
+      function updateDateTime() {
+        const now = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const date = now.toLocaleDateString('pt-BR', options);
+        const time = now.toLocaleTimeString('pt-BR');
+        document.getElementById("datetime").textContent = `${date} ${time}`;
+      }
+      setInterval(updateDateTime, 1000);
+      updateDateTime();
+    </script>
+  </head>
+  <body>
+    {% if user.is_authenticated %}
+      <aside class="sidebar">
+        <div class="text-center mb-4">
+          <a href="{% url 'painel' %}">
+            <img src="{% static 'img/ramic-logo.png' %}" alt="RAMIC Logo" class="img-fluid" style="max-width: 150px; border-radius: 15px;">
+          </a>
+        </div>
+        <ul class="list-unstyled">
+          <li class="mb-2"><a class="btn btn-light w-100 text-start" href="{% url 'painel' %}">🏠 Todos os motores</a></li>
+          <li class="mb-2"><a class="btn btn-light w-100 text-start" href="{% url 'adicionar_motor' %}">➕ Adicionar Motor</a></li>
+          <li class="mb-2"><a class="btn btn-light w-100 text-start" href="{% url 'logout' %}">🚪 Logout</a></li>
+        </ul>
+      </aside>
+      <main class="content">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+        {% block content %}{% endblock %}
+      </main>
+    {% else %}
+      <main class="container py-5">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+        {% block content_unauthenticated %}{% endblock %}
+      </main>
+    {% endif %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

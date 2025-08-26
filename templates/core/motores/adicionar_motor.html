@@ -1,0 +1,101 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block content %}
+<h3 class="mb-4">Cadastro de Motores</h3>
+
+<form method="post" enctype="multipart/form-data" class="card card-body">
+    {% csrf_token %}
+    <div class="row g-3">
+
+        <!-- Coluna da Esquerda (Imagem com Preview) -->
+        <div class="col-lg-4">
+            <div class="text-center p-3 border rounded h-100 d-flex flex-column justify-content-center">
+                <p class="form-label">Imagem do Motor</p>
+                
+                <div id="image-placeholder" class="mb-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="currentColor" class="bi bi-image text-muted" viewBox="0 0 16 16">
+                        <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                        <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/>
+                    </svg>
+                </div>
+                
+                <img id="image-preview" src="#" alt="Prévia da imagem" class="img-fluid rounded mb-3" style="display: none; max-height: 200px; margin: auto;"/>
+                
+                <label for="{{ form.imagem.id_for_label }}" class="form-label mt-2">Escolher arquivo</label>
+                {{ form.imagem }}
+            </div>
+        </div>
+
+        <!-- Coluna da Direita (Campos) -->
+        <div class="col-lg-8">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">{{ form.nome.label }}</label>
+                    {{ form.nome }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{{ form.modelo.label }}</label>
+                    {{ form.modelo }}
+                </div>
+                <div class="col-12">
+                    <label class="form-label">{{ form.numero_serie.label }}</label>
+                    {{ form.numero_serie }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{ form.corrente.label }}</label>
+                    {{ form.corrente }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{ form.potencia.label }}</label>
+                    {{ form.potencia }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{ form.tensao.label }}</label>
+                    {{ form.tensao }}
+                </div>
+                <div class="col-12">
+                    <label class="form-label">{{ form.localizacao.label }}</label>
+                    {{ form.localizacao }}
+                </div>
+                <div class="col-12">
+                    <label class="form-label">{{ form.descricao.label }}</label>
+                    {{ form.descricao }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botões de Ação -->
+    <hr class="my-4">
+    <div class="d-flex justify-content-end gap-2">
+        <button type="reset" class="btn btn-danger">Limpar</button>
+        <button type="submit" class="btn btn-primary">Adicionar Motor</button>
+    </div>
+</form>
+
+<!-- SCRIPT PARA A PRÉVIA DA IMAGEM -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const imageInput = document.querySelector('#{{ form.imagem.id_for_label }}');
+    const imagePreview = document.querySelector('#image-preview');
+    const imagePlaceholder = document.querySelector('#image-placeholder');
+
+    imageInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                if (imagePlaceholder) {
+                    imagePlaceholder.style.display = 'none';
+                }
+                imagePreview.style.display = 'block';
+                imagePreview.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+});
+</script>
+
+{% endblock %}
