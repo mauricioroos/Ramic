@@ -1,22 +1,76 @@
-
 {% extends "core/base.html" %}
-{% block content %}
+
+{% block content_unauthenticated %}
 <div class="row justify-content-center">
-  <div class="col-md-5">
-    <h3 class="text-center mb-1">Criar Conta</h3>
-    <p class="text-center text-muted mb-3">Insira seu e-mail para se inscrever neste aplicativo</p>
-    <form method="post" class="card card-body shadow-sm">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button class="btn btn-dark w-100 btn-pill">Inscreva-se com e-mail</button>
-      <div class="text-center mt-3">
-        <button type="button" class="btn btn-light w-100 btn-pill" disabled>Google</button>
+  <div class="col-lg-5 col-md-7">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h3 class="card-title text-center mb-1">Criar Conta</h3>
+        <p class="text-center text-muted mb-4">Insira os dados para se cadastrar.</p>
+
+        <form method="post">
+          {% csrf_token %}
+          
+          <div class="mb-3">
+            <label for="{{ form.username.id_for_label }}" class="form-label">Usuário</label>
+            {{ form.username }}
+            {% if form.username.help_text %}
+              <div class="form-text text-muted small">{{ form.username.help_text|safe }}</div>
+            {% endif %}
+            <div class="text-danger small mt-1">{{ form.username.errors }}</div>
+          </div>
+
+          <div class="mb-3">
+            <label for="{{ form.password1.id_for_label }}" class="form-label">Senha</label>
+            {{ form.password1 }}
+            <div class="text-danger small mt-1">{{ form.password1.errors }}</div>
+          </div>
+          
+          <div class="mb-4">
+            <label for="{{ form.password2.id_for_label }}" class="form-label">Confirmação de senha</label>
+            {{ form.password2 }}
+            {% if form.password1.help_text %}
+              <div class="form-text text-muted small mt-2">{{ form.password1.help_text|safe }}</div>
+            {% endif %}
+            <div class="text-danger small mt-1">{{ form.password2.errors }}</div>
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary">CRIAR CONTA</button>
+          </div>
+        </form>
+
+        <hr class="my-4">
+
+        <div class="text-center">
+          <p class="mb-0">Já tem conta? <a href="{% url 'login' %}">Entrar</a></p>
+        </div>
+
       </div>
-      <div class="text-center mt-3 small text-muted">
-        <a href="#">Termos de Serviço</a> • <a href="#">Política de Privacidade</a>
-      </div>
-    </form>
-    <p class="text-center mt-3 mb-0">Já tem conta? <a href="{% url 'login' %}">Entrar</a></p>
+    </div>
   </div>
 </div>
-{% endblock %}
+
+<style>
+  .card-body input {
+    display: block;
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--bs-body-color);
+    background-color: var(--bs-body-bg);
+    background-clip: padding-box;
+    border: 1px solid var(--bs-border-color);
+    appearance: none;
+    border-radius: 0.375rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  }
+  .card-body input:focus {
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, .25);
+  }
+</style>
+{% endblock content_unauthenticated %}

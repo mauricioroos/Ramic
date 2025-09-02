@@ -17,37 +17,44 @@
         position: fixed; 
         left: 0; 
         top: 0; 
-        padding: 24px 16px; 
+        padding-top: 70px; /* Adicionado espaço para a barra superior não sobrepor */
       }
       .content { 
         margin-left: 240px; 
         padding: 24px; 
+        padding-top: 80px; /* Adicionado espaço para a barra superior não sobrepor */
       }
       .ramic-card-img { 
         height: 180px; 
         object-fit: contain; 
         padding: 8px;        
       }
-    </style>
-    <div class="d-flex justify-content-end align-items-center p-2 bg-dark text-white">
-      <span>👤 {{ request.user.username }}</span>
-      <span id="datetime" class="ms-3"></span>
-    </div>
-    
-    <script>
-      function updateDateTime() {
-        const now = new Date();
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        const date = now.toLocaleDateString('pt-BR', options);
-        const time = now.toLocaleTimeString('pt-BR');
-        document.getElementById("datetime").textContent = `${date} ${time}`;
+      /* Garante que a barra superior fique fixa no topo */
+      .top-navbar {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1030; /* Padrão do Bootstrap para navbars fixas */
       }
-      setInterval(updateDateTime, 1000);
-      updateDateTime();
-    </script>
+    </style>
   </head>
   <body>
+    
     {% if user.is_authenticated %}
+      <nav class="navbar navbar-dark bg-dark px-3 top-navbar">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="{% url 'painel' %}">
+            <img src="{% static 'img/Ramic-logo.png' %}" alt="RAMIC Logo" style="height: 30px;">
+          </a>
+          
+          <div class="d-flex align-items-center text-white">
+            <span class="me-3">👤 {{ request.user.username }}</span>
+            <span id="datetime" class="me-3 d-none d-md-inline"></span>
+            <a href="{% url 'logout' %}" class="btn btn-danger btn-sm">Sair</a>
+          </div>
+        </div>
+      </nav>
+
       <aside class="sidebar">
         <div class="text-center mb-4">
           <a href="{% url 'painel' %}">
@@ -57,9 +64,9 @@
         <ul class="list-unstyled">
           <li class="mb-2"><a class="btn btn-light w-100 text-start" href="{% url 'painel' %}">🏠 Todos os motores</a></li>
           <li class="mb-2"><a class="btn btn-light w-100 text-start" href="{% url 'adicionar_motor' %}">➕ Adicionar Motor</a></li>
-          <li class="mb-2"><a class="btn btn-light w-100 text-start" href="{% url 'logout' %}">🚪 Logout</a></li>
         </ul>
       </aside>
+      
       <main class="content">
         {% for message in messages %}
           <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
@@ -69,6 +76,7 @@
         {% endfor %}
         {% block content %}{% endblock %}
       </main>
+
     {% else %}
       <main class="container py-5">
         {% for message in messages %}
@@ -80,6 +88,21 @@
         {% block content_unauthenticated %}{% endblock %}
       </main>
     {% endif %}
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      function updateDateTime() {
+        const now = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const date = now.toLocaleDateString('pt-BR', options);
+        const time = now.toLocaleTimeString('pt-BR');
+        const datetimeSpan = document.getElementById("datetime");
+        if (datetimeSpan) {
+            datetimeSpan.textContent = `${date} ${time}`;
+        }
+      }
+      setInterval(updateDateTime, 1000);
+      updateDateTime();
+    </script>
   </body>
 </html>
