@@ -1,0 +1,36 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% load django_bootstrap5 %}
+
+{% block content_unauthenticated %}
+<div class="row justify-content-center">
+  <div class="col-lg-5 col-md-7">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        
+        <div class="text-center mb-4">
+          <img src="{% static 'img/Ramic-logo.png' %}" alt="RAMIC Logo" style="width: 200px; border-radius: 15px;">
+        </div>
+
+        <h3 class="card-title text-center mb-3">Acesso ao Sistema</h3>
+
+        <form method="POST" novalidate>
+          {% csrf_token %}
+          
+          {% bootstrap_form form %}
+          
+          <div class="d-grid mt-4">
+            {% bootstrap_button button_type="submit" content="ENTRAR" %}
+          </div>
+        </form>
+
+        <hr class="my-4">
+
+        <div class="text-center">
+          <p class="mb-0">Não tem conta? <a href="{% url 'cadastro' %}">Crie uma aqui</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content_unauthenticated %}
