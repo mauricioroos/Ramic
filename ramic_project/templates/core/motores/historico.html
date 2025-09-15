@@ -1,0 +1,65 @@
+{% extends "core/base.html" %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div>
+    <h3 class="mb-0">Histórico de Acionamentos</h3>
+    {% if motor %}
+      <p class="text-muted mb-0">Registos do motor: <strong>{{ motor.nome }}</strong></p>
+    {% endif %}
+  </div>
+  <div class="d-flex gap-2">
+    {# LINHA CORRIGIDA: Usando uma tag <a> com classes do Bootstrap #}
+    <a href="{% url 'exportar_historico_txt' %}" class="btn btn-secondary">Exportar Histórico</a>
+    <a href="{% url 'painel' %}" class="btn btn-primary">Voltar ao Painel</a>
+  </div>
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-striped table-hover align-middle mb-0">
+        <thead class="table-dark">
+          <tr>
+            <th>Motor</th>
+            <th>Utilizador</th>
+            <th>Data</th>
+            <th>Hora</th>
+            <th class="text-center">Ação</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for log in logs %}
+          <tr>
+            <td>{{ log.motor.nome }}</td>
+            <td>{{ log.usuario.username|default:"Sistema" }}</td>
+            <td>{{ log.timestamp|date:"d/m/Y" }}</td>
+            <td>{{ log.timestamp|time:"H:i:s" }}</td>
+            <td class="text-center">
+              {% if log.acao == "LIGADO" %}
+                <span class="badge text-bg-success">{{ log.get_acao_display }}</span>
+              {% elif log.acao == "DESLIGADO" %}
+                <span class="badge text-bg-danger">{{ log.get_acao_display }}</span>
+              {% elif log.acao == "MANUTENCAO_INICIO" %}
+                <span class="badge text-bg-warning">Manutenção Iniciada</span>
+              {% elif log.acao == "MANUTENCAO_FIM" %}
+                <span class="badge text-bg-info">Manutenção Finalizada</span>
+              {% else %}
+                <span class="badge text-bg-secondary">{{ log.acao }}</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" class="text-center p-4">
+              <p class="mb-0">Ainda não existem registos para este motor.</p>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
