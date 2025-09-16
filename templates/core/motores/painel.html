@@ -3,40 +3,47 @@
 
 {% block content %}
 <h2 class="mb-1">Acionamento de Motores</h2>
-<p class="text-muted">Motores Industriais</p>
+<p class="text-muted">Monitoramento de Motores Industriais</p>
 
 <form class="mb-3" method="get">
   <div class="input-group">
-    <input type="text" class="form-control" name="q" placeholder="Pesquisar motor" value="{{ q }}">
+    <input type="text" class="form-control" name="q" placeholder="Pesquisar motor por nome, serial ou localização..." value="{{ q }}">
     <button class="btn btn-outline-secondary" type="submit">🔎</button>
   </div>
 </form>
 
 <style>
     .image-container {
+        /* Necessário para posicionar o indicador sobre a imagem */
         position: relative;
     }
+
     .status-indicator {
+        /* Posiciona o indicador no canto superior direito */
         position: absolute;
         top: 10px;
         right: 10px;
-        width: 28px;
-        height: 28px;
+
+        /* Cria o círculo */
+        width: 25px;
+        height: 25px;
         border-radius: 50%;
+
+        /* Adiciona uma borda e sombra para destacar */
         border: 2px solid white;
         box-shadow: 0 0 10px rgba(0,0,0,0.5);
+
+        /* Aplica a animação que definimos abaixo */
+        animation: pulse-animation 1.5s infinite;
     }
   
+    /* Animação que cria o efeito de pulsar/piscar */
     @keyframes pulse-animation {
         0% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4); }
         70% { box-shadow: 0 0 0 10px rgba(0, 0, 0, 0); }
         100% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); }
     }
-    .blinking-indicator {
-        animation: pulse-animation 1.5s infinite;
-    }
 </style>
-
 <div class="row g-3">
   {% for motor in motores %}
   <div class="col-12 col-md-6 col-lg-4 col-xl-3">
@@ -51,12 +58,14 @@
           </div>
         {% endif %}
 
-        <div class="status-indicator {% if motor.ligado or motor.em_manutencao %}blinking-indicator{% endif %}" 
-             style="{% if motor.em_manutencao %}background-color: #ffc107;{% elif motor.ligado %}background-color: #198754;{% else %}background-color: #dc3545;{% endif %}"
+        <div class="status-indicator" 
+             style="{% if motor.em_manutencao %}background-color: #ffc107; /* Amarelo */
+                     {% elif motor.ligado %}background-color: #198754;  /* Verde */
+                     {% else %}background-color: #dc3545;               /* Vermelho */
+                     {% endif %}"
              title="{% if motor.em_manutencao %}Em Manutenção{% elif motor.ligado %}Ligado{% else %}Desligado{% endif %}">
         </div>
       </div>
-
       <div class="card-body d-flex flex-column">
         <h5 class="card-title mb-1">{{ motor.nome }}</h5>
         
@@ -64,35 +73,16 @@
           <div><strong>Modelo:</strong> <span class="text-dark"><strong>{{ motor.modelo|default:"—" }}</strong></span></div>
           <div><strong>Localização:</strong> <span class="text-dark"><strong>{{ motor.localizacao|default:"—" }}</strong></span></div>
           <div><strong>Serial:</strong> <span class="text-dark"><strong>{{ motor.numero_serie }}</strong></span></div>
-
-          {% if motor.descricao %}
-            <div class="mt-2"><strong>Descrição:</strong> <span class="text-dark"><strong>{{ motor.descricao }}</strong></span></div>
-          {% endif %}
           <div class="row gx-3 mt-2 text-center">
-              <div class="col">
-                <small class="text-muted">Potência</small><br>
-                <strong class="text-dark">{{ motor.potencia|default:"—" }} W</strong>
-              </div>
-              <div class="col">
-                <small class="text-muted">Tensão</small><br>
-                <strong class="text-dark">{{ motor.tensao|default:"—" }} V</strong>
-              </div>
-              <div class="col">
-                <small class="text-muted">Corrente</small><br>
-                <strong class="text-dark">{{ motor.corrente|default:"—" }} A</strong>
-              </div>
+              <div class="col"><small class="text-muted">Potência</small><br><strong class="text-dark">{{ motor.potencia|default:"—" }} W</strong></div>
+              <div class="col"><small class="text-muted">Tensão</small><br><strong class="text-dark">{{ motor.tensao|default:"—" }} V</strong></div>
+              <div class="col"><small class="text-muted">Corrente</small><br><strong class="text-dark">{{ motor.corrente|default:"—" }} A</strong></div>
           </div>
         </div>
         
         <div class="mb-3">
-          <strong>Status:</strong>
-          {% if motor.em_manutencao %}
-            <span class="badge text-bg-warning">Em Manutenção</span>
-          {% elif motor.ligado %}
-            <span class="badge text-bg-success">Ligado</span>
-          {% else %}
-            <span class="badge text-bg-secondary">Desligado</span>
-          {% endif %}
+          <strong>Estado:</strong>
+          {% if motor.em_manutencao %}<span class="badge text-bg-warning">Em Manutenção</span>{% elif motor.ligado %}<span class="badge text-bg-success">Ligado</span>{% else %}<span class="badge text-bg-secondary">Desligado</span>{% endif %}
         </div>
 
         <div class="d-flex align-items-center justify-content-between mt-auto">
@@ -110,8 +100,8 @@
             </div>
         
             <div class="d-flex align-items-center gap-2">
-                <span id="status-icon-online-{{ motor.id }}" style="display: none;" title="Conectado ao Arduino"><i class="bi bi-wifi h5 text-success mb-0"></i></span>
-                <span id="status-icon-offline-{{ motor.id }}" title="Desconectado do Arduino"><i class="bi bi-wifi-off h5 text-muted mb-0"></i></span>
+                <span id="status-icon-online-{{ motor.id }}" style="display: none;" title="Conectado"><i class="bi bi-wifi h5 text-success mb-0"></i></span>
+                <span id="status-icon-offline-{{ motor.id }}" title="Desconectado"><i class="bi bi-wifi-off h5 text-muted mb-0"></i></span>
         
                 {% if user.is_staff %}
                 <div class="dropdown">
@@ -135,15 +125,36 @@
     </div>
   </div>
   {% empty %}
-    <div class="col-12">
-        <div class="card card-body text-center">
-            <p class="mb-0">Nenhum motor cadastrado. <a href="{% url 'adicionar_motor' %}">Adicionar o primeiro motor agora</a>.</p>
-        </div>
-    </div>
+    <div class="col-12"><div class="card card-body text-center"><p class="mb-0">Nenhum motor cadastrado. <a href="{% url 'adicionar_motor' %}">Adicionar o primeiro motor agora</a>.</p></div></div>
   {% endfor %}
 </div>
     
 <script>
-// verifica o status do WiFi continua aqui.
+document.addEventListener('DOMContentLoaded', function() {
+    const motorIds = [{% for motor in motores %}{{ motor.id }},{% endfor %}];
+    async function checkMotorStatus(motorId) {
+        const onlineIcon = document.getElementById(`status-icon-online-${motorId}`);
+        const offlineIcon = document.getElementById(`status-icon-offline-${motorId}`);
+        try {
+            const response = await fetch(`/api/motor/${motorId}/status/`);
+            const data = await response.json();
+            if (data.status === 'online') {
+                onlineIcon.style.display = 'inline';
+                offlineIcon.style.display = 'none';
+            } else {
+                onlineIcon.style.display = 'none';
+                offlineIcon.style.display = 'inline';
+            }
+        } catch (error) {
+            onlineIcon.style.display = 'none';
+            offlineIcon.style.display = 'inline';
+        }
+    }
+    function updateAllStatuses() {
+        motorIds.forEach(id => checkMotorStatus(id));
+    }
+    updateAllStatuses();
+    setInterval(updateAllStatuses, 5000);
+});
 </script>
 {% endblock %}
