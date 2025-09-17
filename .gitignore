@@ -1,1 +1,9 @@
-venv
+# Ambientes Virtuais
+venv/
+.venv/
+# Ficheiros de Editores de Código e Sistema Operativo
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
