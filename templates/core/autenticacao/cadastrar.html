@@ -13,6 +13,7 @@
           {% csrf_token %}
           
           {% bootstrap_form form %}
+          {% bootstrap_messages %}
 
           <div class="d-grid mt-4">
             {% bootstrap_button button_type="submit" content="CRIAR CONTA" %}

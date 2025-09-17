@@ -10,6 +10,7 @@ from django.utils import timezone
 from datetime import timedelta
 from .models import Motor, LogAcionamento
 from django import forms
+from django.contrib.auth.models import Group
 
 
 # ---------------------- FORMULÁRIO ----------------------
@@ -70,12 +71,26 @@ def login_view(request):
 def signup_view(request):
     if request.user.is_authenticated:
         return redirect("painel")
+    
     if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
+
+            nome_grupo = f"{user.username}_grupoMotor"
+            grupo = Group.objects.create(name=nome_grupo)
+            user.groups.add(grupo)
+
             login(request, user)
+            messages.success(request, "Conta criada com sucesso!")
             return redirect("painel")
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}:{error}")
+    else:
+        form = UserCreationForm()
+
     return render(request, "core/autenticacao/cadastrar.html", {"form": UserCreationForm()})
 
 
@@ -88,7 +103,12 @@ def logout_view(request):
 @login_required
 def dashboard_view(request):
     q = request.GET.get("q", "").strip()
-    motores = Motor.objects.all()
+
+    if request.user.is_superuser or request.user.is_staff:
+        motores = Motor.objects.all()
+    else:
+        motores = Motor.objects.filter(grupos__in=request.user.groups.all()).distinct()
+
     if q:
         motores = motores.filter(
             Q(nome__icontains=q) |
@@ -104,9 +124,21 @@ def adicionar_motor_view(request):
     if request.method == "POST":
         form = MotorForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            motor = form.save(commit=False)
+            motor.save()
+
+            grupo_usuario = request.user.groups.first()
+            if grupo_usuario:
+                motor.grupos.add(grupo_usuario)
+
+            messages.success(request, "Motor cadastrado com sucesso!")
             return redirect("painel")
-    return render(request, "core/motores/adicionar_motor.html", {"form": MotorForm()})
+        else:
+            messages.error(request, "Erro ao cadastrar motor. Verifique os campos abaixo.")
+    else:
+        form = MotorForm()
+
+    return render(request, "core/motores/adicionar_motor.html", {"form": form})
 
 
 @login_required

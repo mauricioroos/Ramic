@@ -3,7 +3,7 @@ from django.contrib.auth.models import User, Group
 
 
 class Motor(models.Model):
-    grupoMotor = models.ForeignKey(Group, on_delete=models.PROTECT, null=True, blank=True, default=1)
+    grupos = models.ManyToManyField(Group, related_name="motores")
     nome = models.CharField(max_length=100)
     numero_serie = models.CharField(max_length=50, unique=True)
     descricao = models.TextField(blank=True, null=True)
