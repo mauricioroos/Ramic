@@ -103,6 +103,7 @@
                 <span id="status-icon-online-{{ motor.id }}" style="display: none;" title="Conectado"><i class="bi bi-wifi h5 text-success mb-0"></i></span>
                 <span id="status-icon-offline-{{ motor.id }}" title="Desconectado"><i class="bi bi-wifi-off h5 text-muted mb-0"></i></span>
         
+                <!--{% if user.is_superuser or user in motor.grupos.first.user_set.all %}-->
                 {% if user.is_staff %}
                 <div class="dropdown">
                     <button class="btn btn-secondary btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false"> ⋮ </button>
