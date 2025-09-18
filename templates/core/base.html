@@ -93,7 +93,9 @@
           <div class="d-flex align-items-center text-white">
             <span class="me-3">👤 {{ request.user.username }}</span>
             <span id="datetime" class="me-3 d-none d-md-inline"></span>
-            <a href="{% url 'logout' %}" class="btn btn-danger btn-sm">Sair</a>
+            <a href="{% url 'logout' %}" class="btn btn-danger p-2 lh-1" title="Sair" style="border-radius: 0.5rem;">
+              <i class="bi bi-power h4 mb-0"></i>
+          </a>
           </div>
         </div>
       </nav>
