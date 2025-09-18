@@ -14,30 +14,21 @@
 
 <style>
     .image-container {
-        /* Necessário para posicionar o indicador sobre a imagem */
         position: relative;
     }
 
     .status-indicator {
-        /* Posiciona o indicador no canto superior direito */
         position: absolute;
         top: 10px;
         right: 10px;
-
-        /* Cria o círculo */
         width: 25px;
         height: 25px;
         border-radius: 50%;
-
-        /* Adiciona uma borda e sombra para destacar */
         border: 2px solid white;
         box-shadow: 0 0 10px rgba(0,0,0,0.5);
-
-        /* Aplica a animação que definimos abaixo */
         animation: pulse-animation 1.5s infinite;
     }
   
-    /* Animação que cria o efeito de pulsar/piscar */
     @keyframes pulse-animation {
         0% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4); }
         70% { box-shadow: 0 0 0 10px rgba(0, 0, 0, 0); }
@@ -103,7 +94,6 @@
                 <span id="status-icon-online-{{ motor.id }}" style="display: none;" title="Conectado"><i class="bi bi-wifi h5 text-success mb-0"></i></span>
                 <span id="status-icon-offline-{{ motor.id }}" title="Desconectado"><i class="bi bi-wifi-off h5 text-muted mb-0"></i></span>
         
-                <!--{% if user.is_superuser or user in motor.grupos.first.user_set.all %}-->
                 {% if user.is_staff %}
                 <div class="dropdown">
                     <button class="btn btn-secondary btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false"> ⋮ </button>
