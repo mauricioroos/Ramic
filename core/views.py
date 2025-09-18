@@ -11,6 +11,7 @@ from datetime import timedelta
 from .models import Motor, LogAcionamento
 from django import forms
 from django.contrib.auth.models import Group
+import csv
 
 
 # ---------------------- FORMULÁRIO ----------------------
@@ -159,14 +160,21 @@ def apagar_motor_view(request, motor_id: int):
     return redirect("painel")
 
 
-# ---------------------- HISTÓRICO ----------------------
+# ---------------------- HISTÓRICO ----------------------#
 @login_required
 def historico_view(request, motor_id: int):
     motor = get_object_or_404(Motor, id=motor_id)
-    # CORREÇÃO 1: Adicionado o sinal de menos (-) para ordenar do mais novo para o mais antigo
+    q = request.GET.get("q", "").strip()
+    
     logs = motor.logs.all().order_by('-timestamp')
+    
+    if q:
+        logs = logs.filter(
+            Q(acao__icontains=q) |
+            Q(usuario__username__icontains=q)
+        )
 
-    return render(request, "core/motores/historico.html", {"motor": motor, "logs": logs})
+    return render(request, "core/motores/historico.html", {"motor": motor, "logs": logs, "q": q})
 
 
 # ---------------------- AÇÕES ----------------------
@@ -223,16 +231,34 @@ def check_motor_status_view(request, motor_id: int):
         status = 'online'
     return JsonResponse({'status': status})
 
-
 @login_required
-def exportar_historico_txt_view(request):
-    response = HttpResponse(content_type='text/plain; charset=utf-8')
-    response['Content-Disposition'] = f'attachment; filename="historico_motores_{timezone.now().strftime("%Y-%m-%d")}.txt"'
+def exportar_historico_csv_view(request):
+    response = HttpResponse(content_type='text/csv; charset=utf-8')
+    response['Content-Disposition'] = f'attachment; filename="historico_motores_{timezone.now().strftime("%Y-%m-%d")}.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Motor', 'Data', 'Hora', 'Ação', 'Utilizador'])
+
+    # Se quiser exportar o histórico de todos os motores
     logs = LogAcionamento.objects.all().order_by('-timestamp')
-    linhas = [f"Relatório de Histórico de Motores - Gerado em: {timezone.now().strftime('%d/%m/%Y %H:%M')}\n\n"]
+
+    # Se quiser exportar o histórico apenas do motor que está a visualizar (precisa de passar o motor_id na URL)
+    # motor_id = request.GET.get('motor_id')
+    # if motor_id:
+    #     logs = LogAcionamento.objects.filter(motor_id=motor_id).order_by('-timestamp')
+    # else:
+    #     logs = LogAcionamento.objects.all().order_by('-timestamp')
+
+
     for log in logs:
-        linhas.append(f"{log.motor.nome} | {log.timestamp.strftime('%d/%m/%Y %H:%M')} | {log.get_acao_display()} | Usuário: {log.usuario}\n")
-    response.writelines(linhas)
+        writer.writerow([
+            log.motor.nome,
+            log.timestamp.strftime('%d/%m/%Y'),
+            log.timestamp.strftime('%H:%M:%S'),
+            log.get_acao_display(),
+            log.usuario.username if log.usuario else "Sistema"
+        ])
+
     return response
 
 

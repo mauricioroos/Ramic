@@ -119,33 +119,29 @@
     <div class="col-12"><div class="card card-body text-center"><p class="mb-0">Nenhum motor cadastrado. <a href="{% url 'adicionar_motor' %}">Adicionar o primeiro motor agora</a>.</p></div></div>
   {% endfor %}
 </div>
-    
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const motorIds = [{% for motor in motores %}{{ motor.id }},{% endfor %}];
-    async function checkMotorStatus(motorId) {
-        const onlineIcon = document.getElementById(`status-icon-online-${motorId}`);
-        const offlineIcon = document.getElementById(`status-icon-offline-${motorId}`);
-        try {
-            const response = await fetch(`/api/motor/${motorId}/status/`);
-            const data = await response.json();
-            if (data.status === 'online') {
-                onlineIcon.style.display = 'inline';
-                offlineIcon.style.display = 'none';
-            } else {
-                onlineIcon.style.display = 'none';
-                offlineIcon.style.display = 'inline';
-            }
-        } catch (error) {
-            onlineIcon.style.display = 'none';
-            offlineIcon.style.display = 'inline';
-        }
-    }
-    function updateAllStatuses() {
-        motorIds.forEach(id => checkMotorStatus(id));
-    }
-    updateAllStatuses();
-    setInterval(updateAllStatuses, 5000);
-});
-</script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const searchInput = document.querySelector('input[name="q"]');
+      const motorGrid = document.getElementById('motor-grid');
+      const originalGridContent = motorGrid.innerHTML;
+  
+      let timeout = null;
+  
+      searchInput.addEventListener('input', function() {
+          clearTimeout(timeout);
+          timeout = setTimeout(function() {
+              const query = searchInput.value.trim();
+              fetch(`/api/motores/search/?q=${query}`)
+                  .then(response => response.text())
+                  .then(html => {
+                      motorGrid.innerHTML = html;
+                  })
+                  .catch(error => {
+                      console.error('Erro ao buscar motores:', error);
+                      motorGrid.innerHTML = originalGridContent;
+                  });
+          }, 300); 
+      });
+  });
+  </script>
 {% endblock %}

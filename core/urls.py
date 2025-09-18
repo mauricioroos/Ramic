@@ -18,6 +18,6 @@ urlpatterns = [
 
     path("api/motor/<int:motor_id>/heartbeat/", views.motor_heartbeat_view, name="motor_heartbeat"),
     path("api/motor/<int:motor_id>/status/", views.check_motor_status_view, name="check_motor_status"),
-    path("historico/exportar/txt/", views.exportar_historico_txt_view, name="exportar_historico_txt"),
+    path("historico/exportar/csv/", views.exportar_historico_csv_view, name="exportar_historico_csv"),
     path("api/sistema/status/", views.sistema_status_view, name="sistema_status"),
 ]

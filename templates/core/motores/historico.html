@@ -10,10 +10,17 @@
     {% endif %}
   </div>
   <div class="d-flex gap-2">
-    <a href="{% url 'exportar_historico_txt' %}" class="btn btn-secondary">Exportar Histórico</a>
+    <a href="{% url 'exportar_historico_csv' %}" class="btn btn-secondary">Exportar Histórico</a>
     <a href="{% url 'painel' %}" class="btn btn-primary">Voltar ao Painel</a>
   </div>
 </div>
+
+<form class="mb-3" method="get">
+  <div class="input-group">
+    <input type="text" class="form-control" name="q" placeholder="Pesquisar por ação ou utilizador..." value="{{ q }}">
+    <button class="btn btn-outline-secondary" type="submit">🔎</button>
+  </div>
+</form>
 
 <div class="card shadow-sm">
   <div class="card-body">
