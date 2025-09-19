@@ -94,7 +94,6 @@
                 <span id="status-icon-online-{{ motor.id }}" style="display: none;" title="Conectado"><i class="bi bi-wifi h5 text-success mb-0"></i></span>
                 <span id="status-icon-offline-{{ motor.id }}" title="Desconectado"><i class="bi bi-wifi-off h5 text-muted mb-0"></i></span>
         
-                {% if user.is_staff %}
                 <div class="dropdown">
                     <button class="btn btn-secondary btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false"> ⋮ </button>
                     <ul class="dropdown-menu dropdown-menu-end">
@@ -109,7 +108,6 @@
                         <li><form method="POST" action="{% url 'apagar_motor' motor.id %}" onsubmit="return confirm('Tem certeza que deseja apagar o motor \'{{ motor.nome|escapejs }}\'?');">{% csrf_token %}<button type="submit" class="dropdown-item text-danger">Apagar</button></form></li>
                     </ul>
                 </div>
-                {% endif %}
             </div>
         </div>
       </div>

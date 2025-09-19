@@ -239,15 +239,7 @@ def exportar_historico_csv_view(request):
     writer = csv.writer(response)
     writer.writerow(['Motor', 'Data', 'Hora', 'Ação', 'Utilizador'])
 
-    # Se quiser exportar o histórico de todos os motores
     logs = LogAcionamento.objects.all().order_by('-timestamp')
-
-    # Se quiser exportar o histórico apenas do motor que está a visualizar (precisa de passar o motor_id na URL)
-    # motor_id = request.GET.get('motor_id')
-    # if motor_id:
-    #     logs = LogAcionamento.objects.filter(motor_id=motor_id).order_by('-timestamp')
-    # else:
-    #     logs = LogAcionamento.objects.all().order_by('-timestamp')
 
 
     for log in logs:
