@@ -12,6 +12,7 @@ from .models import Motor, LogAcionamento
 from django import forms
 from django.contrib.auth.models import Group
 import csv
+from django.contrib.auth.models import User
 
 
 # ---------------------- FORMULÁRIO ----------------------
@@ -169,10 +170,15 @@ def historico_view(request, motor_id: int):
     logs = motor.logs.all().order_by('-timestamp')
     
     if q:
-        logs = logs.filter(
-            Q(acao__icontains=q) |
-            Q(usuario__username__icontains=q)
-        )
+        # Tenta encontrar um utilizador com o nome exato pesquisado
+        user_match = User.objects.filter(username__iexact=q).first()
+
+        if user_match:
+            # Se encontrou um utilizador, filtra APENAS por esse utilizador
+            logs = logs.filter(usuario=user_match)
+        else:
+            # Se não encontrou um utilizador exato, faz a busca geral apenas na ação
+            logs = logs.filter(acao__icontains=q)
 
     return render(request, "core/motores/historico.html", {"motor": motor, "logs": logs, "q": q})
 
