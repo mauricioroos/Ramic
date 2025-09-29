@@ -8,3 +8,5 @@ venv/
 *.swo
 .DS_Store
 *.pyc
+core/__pycache__/views.cpython-313.pyc
+db.sqlite3
