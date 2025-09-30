@@ -13,6 +13,11 @@ from django import forms
 from django.contrib.auth.models import Group
 import csv
 from django.contrib.auth.models import User
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from .models import Motor
+from django.db.models import Q
+from django.urls import reverse
 
 
 # ---------------------- FORMULÁRIO ----------------------
@@ -190,8 +195,10 @@ def ligar_motor(request, motor_id):
     motor.ligado = True
     motor.save()
     LogAcionamento.objects.create(motor=motor, acao="LIGADO", usuario=request.user)
-    return redirect("painel")
-
+    
+    # Linha modificada para manter a busca
+    q = request.POST.get('q', '')
+    return redirect(f"{reverse('painel')}?q={q}")
 
 @login_required
 def desligar_motor(request, motor_id):
@@ -199,8 +206,10 @@ def desligar_motor(request, motor_id):
     motor.ligado = False
     motor.save()
     LogAcionamento.objects.create(motor=motor, acao="DESLIGADO", usuario=request.user)
-    return redirect("painel")
-
+    
+    # Linha modificada para manter a busca
+    q = request.POST.get('q', '')
+    return redirect(f"{reverse('painel')}?q={q}")
 
 @login_required
 def iniciar_manutencao(request, motor_id):
@@ -208,8 +217,10 @@ def iniciar_manutencao(request, motor_id):
     motor.em_manutencao = True
     motor.save()
     LogAcionamento.objects.create(motor=motor, acao="MANUTENCAO_INICIO", usuario=request.user)
-    return redirect("painel")
-
+    
+    # Linha modificada para manter a busca
+    q = request.POST.get('q', '')
+    return redirect(f"{reverse('painel')}?q={q}")
 
 @login_required
 def finalizar_manutencao(request, motor_id):
@@ -217,7 +228,9 @@ def finalizar_manutencao(request, motor_id):
     motor.em_manutencao = False
     motor.save()
     LogAcionamento.objects.create(motor=motor, acao="MANUTENCAO_FIM", usuario=request.user)
-    return redirect("painel")
+    
+    q = request.POST.get('q', '')
+    return redirect(f"{reverse('painel')}?q={q}")
 
 
 # ---------------------- API ----------------------
@@ -268,3 +281,21 @@ def sistema_status_view(request):
         if motor.em_manutencao:
             status_geral = "manutencao"
     return JsonResponse({'status': status_geral})
+
+@login_required
+def search_motores_view(request):
+    q = request.GET.get("q", "").strip()
+
+    if request.user.is_superuser or request.user.is_staff:
+        motores = Motor.objects.all()
+    else:
+        motores = Motor.objects.filter(grupos__in=request.user.groups.all()).distinct()
+
+    if q:
+        motores = motores.filter(
+            Q(nome__icontains=q) |
+            Q(numero_serie__icontains=q) |
+            Q(localizacao__icontains=q)
+        )
+    
+    return render(request, "core/motores/lista_motor.html", {"motores": motores, "q": q})

@@ -20,4 +20,5 @@ urlpatterns = [
     path("api/motor/<int:motor_id>/status/", views.check_motor_status_view, name="check_motor_status"),
     path("historico/exportar/csv/", views.exportar_historico_csv_view, name="exportar_historico_csv"),
     path("api/sistema/status/", views.sistema_status_view, name="sistema_status"),
+    path("api/motores/search/", views.search_motores_view, name="search_motores"),
 ]
