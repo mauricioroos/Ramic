@@ -2,6 +2,9 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    # CONFIGURAÇÕES MQTT: DAVI
+    path("enviar_comando/", views.enviar_comando_view, name="enviar_comando"),
+
     path("", views.dashboard_view, name="painel"),
     path("login/", views.login_view, name="login"),
     path("logout/", views.logout_view, name="logout"),

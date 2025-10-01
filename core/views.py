@@ -19,6 +19,18 @@ from .models import Motor
 from django.db.models import Q
 from django.urls import reverse
 
+# CONFIGURAÇÕES MQTT: DAVI
+from .mqtt_client import MqttClient
+import json
+
+def enviar_comando_view(request):
+    cliente = MqttClient()
+    cliente.connect()  # Se ainda não estiver conectado globalmente
+
+    payload = json.dumps({"comando": "ligar", "dispositivo": "lampada_01"})
+    cliente.publish("meuapp/comandos", payload)
+
+    return JsonResponse({"status": "comando enviado"})
 
 # ---------------------- FORMULÁRIO ----------------------
 class MotorForm(forms.ModelForm):
