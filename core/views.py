@@ -18,19 +18,16 @@ from django.contrib.auth.decorators import login_required
 from .models import Motor
 from django.db.models import Q
 from django.urls import reverse
-
-# CONFIGURAÇÕES MQTT: DAVI
 from .mqtt_client import MqttClient
 import json
 
-def enviar_comando_view(request):
+# ---------------------- CONFIGURAÇÕES MQTT: DAVI ----------------------
+def mqtt_pub_view(comando):
     cliente = MqttClient()
-    cliente.connect()  # Se ainda não estiver conectado globalmente
+    cliente.connect()
 
-    payload = json.dumps({"comando": "ligar", "dispositivo": "lampada_01"})
+    payload = json.dumps({"comando": comando})
     cliente.publish("meuapp/comandos", payload)
-
-    return JsonResponse({"status": "comando enviado"})
 
 # ---------------------- FORMULÁRIO ----------------------
 class MotorForm(forms.ModelForm):
@@ -65,9 +62,6 @@ class MotorForm(forms.ModelForm):
             'descricao': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'imagem': forms.FileInput(attrs={'class': 'form-control'}),
         }
-
-    
-
 
 # ---------------------- AUTENTICAÇÃO ----------------------
 def login_view(request):
@@ -203,6 +197,7 @@ def historico_view(request, motor_id: int):
 # ---------------------- AÇÕES ----------------------
 @login_required
 def ligar_motor(request, motor_id):
+    mqtt_pub_view("ligar")
     motor = get_object_or_404(Motor, id=motor_id)
     motor.ligado = True
     motor.save()
@@ -214,6 +209,8 @@ def ligar_motor(request, motor_id):
 
 @login_required
 def desligar_motor(request, motor_id):
+    mqtt_pub_view("desligar")
+
     motor = get_object_or_404(Motor, id=motor_id)
     motor.ligado = False
     motor.save()
