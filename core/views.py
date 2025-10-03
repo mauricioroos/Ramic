@@ -26,8 +26,8 @@ def mqtt_pub_view(comando):
     cliente = MqttClient()
     cliente.connect()
 
-    payload = json.dumps({"comando": comando})
-    cliente.publish("meuapp/comandos", payload)
+    #payload = json.dumps({"comando": comando})
+    cliente.publish("motor/a110", comando)
 
 # ---------------------- FORMULÁRIO ----------------------
 class MotorForm(forms.ModelForm):
