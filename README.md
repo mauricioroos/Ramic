@@ -29,6 +29,64 @@ O **RAMIC** é um sistema de controle e monitoramento de motores industriais des
 
 Siga os passos abaixo para configurar o ambiente de desenvolvimento. Clique no seu sistema operacional:
 
+<details> <summary><strong> 💻 Raspberry </strong></summary>
+
+1.  **Instale os pacotes:**
+
+    Bash
+    
+    ```
+    sudo apt install net-tools
+    sudo apt install openssh-server
+    sudo apt install mosquitto mosquitto_clients
+
+    sudo nano /etc/netplan/*.yaml
+    sudo tail -f /log/var/mosquitto/mosquitto.conf
+    ```
+    
+2.  **Identifique falhas:**
+    
+    Bash
+    
+    ```
+    sudo systemctl status ssh
+    sudo systemctl start ssh
+    sudo systemctl status mosquitto 
+    sudo ss -tulnp | grep 1883
+
+    sudo cd /etc/ssh
+    sudo ssh-keygen -A
+    sudo sshd -t
+    
+    ```
+    
+3.  **Verifique bloqueios no firewall do linux e autorize portas:**
+    
+    Bash
+    
+    ```
+    sudo ufw status verbose  
+    sudo ufw allow 1883 
+    sudo ufw allow ssh
+    sudo ufw enable
+    
+    ```
+    
+4.  **Inscreva-se e publique tópicos:**
+    
+    Bash
+    
+    ```
+    mosquitto_sub -u <usuario> -P <senha> -v -t 'motor/a110'   
+    mosquitto_pub -h <ip> -u <usuario> -P <senha> -t "motor/a110" -m "ligar" 
+    mosquitto_pub -h <ip> -u <usuario> -P <senha> -t "motor/a110" -m "desligar"
+    
+    ```
+    
+
+</details>
+
+
 <details> <summary><strong> 💻 Windows </strong></summary>
 
 1.  **Crie e ative um ambiente virtual:**
