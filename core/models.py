@@ -19,6 +19,11 @@ class Motor(models.Model):
 
     def __str__(self):
         return self.nome
+    
+    def delete(self, *args, **kwargs):
+        if self.imagem:
+           self.imagem.delete(save=False) 
+        super().delete(*args, **kwargs)
 
 
 class LogAcionamento(models.Model):

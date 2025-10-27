@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate, logout
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm
+from .forms import CustomUserCreationForm
 from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.db.models import Q
@@ -20,6 +21,7 @@ from django.db.models import Q
 from django.urls import reverse
 from .mqtt_client import MqttClient
 import json
+
 
 # ---------------------- CONFIGURAÇÕES MQTT: DAVI ----------------------
 def mqtt_pub_view(comando):
@@ -86,7 +88,7 @@ def signup_view(request):
         return redirect("painel")
     
     if request.method == "POST":
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
 
@@ -97,15 +99,11 @@ def signup_view(request):
             login(request, user)
             messages.success(request, "Conta criada com sucesso!")
             return redirect("painel")
-        else:
-            for field, errors in form.errors.items():
-                for error in errors:
-                    messages.error(request, f"{field}:{error}")
+        
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
 
-    return render(request, "core/autenticacao/cadastrar.html", {"form": UserCreationForm()})
-
+    return render(request, "core/autenticacao/cadastrar.html", {"form": form})
 
 def logout_view(request):
     logout(request)
