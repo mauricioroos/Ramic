@@ -39,6 +39,8 @@ Siga os passos abaixo para configurar o ambiente de desenvolvimento. Clique no s
     sudo apt install net-tools
     sudo apt install openssh-server
     sudo apt install mosquitto mosquitto_clients
+    sudo apt intall mariadb-server
+    sudo apt install guncorn nginx -y 
 
     sudo nano /etc/netplan/*.yaml
     sudo tail -f /log/var/mosquitto/mosquitto.conf
@@ -53,6 +55,8 @@ Siga os passos abaixo para configurar o ambiente de desenvolvimento. Clique no s
     sudo systemctl start ssh
     sudo systemctl status mosquitto 
     sudo ss -tulnp | grep 1883
+    sudo chown mosquitto:mosquitto /etc/mosquitto/passwd
+    sudo chmod 600 /etc/mosquitto/passwd
 
     sudo cd /etc/ssh
     sudo ssh-keygen -A
