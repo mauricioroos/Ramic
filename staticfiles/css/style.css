@@ -1,0 +1,90 @@
+
+/* Estilos Gerais (do base.html) */
+
+body {
+  background-color: #f8f9fa;
+}
+
+.sidebar {
+  width: 240px;
+  min-height: 100vh;
+  background: #fff;
+  border-right: 1px solid #dee2e6;
+  position: fixed;
+  left: 0;
+  top: 0;
+  padding-top: 70px;
+  transition: transform 0.3s ease-in-out;
+  z-index: 1040;
+}
+
+.content {
+  margin-left: 240px;
+  padding: 24px;
+  padding-top: 80px;
+  transition: margin-left 0.3s ease-in-out;
+}
+
+.ramic-card-img {
+  height: 180px;
+  width: 100%;
+  object-fit: contain;
+  padding: 8px;
+  background-color: #f0f0f0;
+}
+
+.top-navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1050;
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    width: 240px;
+    height: 100vh;
+  }
+  .sidebar.active {
+    transform: translateX(0);
+  }
+  .content {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 992px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  .sidebar.active {
+    transform: translateX(0);
+  }
+  .content {
+    margin-left: 0;
+  }
+}
+
+.image-container {
+    position: relative;
+}
+
+.status-indicator {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    animation: pulse-animation 1.5s infinite;
+}
+
+@keyframes pulse-animation {
+    0% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(0, 0, 0, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); }
+}
