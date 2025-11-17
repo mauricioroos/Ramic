@@ -71,11 +71,6 @@ STATIC_URL = "static/"
 #STATIC_ROOT = os.path.join("../", BASE_DIR, "staticfiles")
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
-<<<<<<< HEAD
-#STATIC_ROOT = ""
-
-=======
->>>>>>> 3f39638e29e80d4928627a6bffb104759d069721
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
