@@ -44,15 +44,15 @@
             <td>{{ log.timestamp|time:"H:i:s" }}</td>
             <td class="text-center">
               {% if log.acao == "LIGADO" %}
-                <span class="badge text-bg-success">{{ log.get_acao_display }}</span>
+                <span class="badge btn-success">{{ log.get_acao_display }}</span>
               {% elif log.acao == "DESLIGADO" %}
-                <span class="badge text-bg-danger">{{ log.get_acao_display }}</span>
+                <span class="badge btn-danger">{{ log.get_acao_display }}</span>
               {% elif log.acao == "MANUTENCAO_INICIO" %}
-                <span class="badge text-bg-warning">Manutenção Iniciada</span>
+                <span class="badge btn-warning">Manutenção Iniciada</span>
               {% elif log.acao == "MANUTENCAO_FIM" %}
-                <span class="badge text-bg-info">Manutenção Finalizada</span>
+                <span class="badge btn-info">Manutenção Finalizada</span>
               {% else %}
-                <span class="badge text-bg-secondary">{{ log.acao }}</span>
+                <span class="badge btn-secondary">{{ log.acao }}</span>
               {% endif %}
             </td>
           </tr>
