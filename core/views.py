@@ -179,14 +179,14 @@ def historico_view(request, motor_id: int):
     logs = motor.logs.all().order_by('-timestamp')
     
     if q:
-        # Tenta encontrar um utilizador com o nome exato pesquisado
+        
         user_match = User.objects.filter(username__iexact=q).first()
 
         if user_match:
-            # Se encontrou um utilizador, filtra APENAS por esse utilizador
+           
             logs = logs.filter(usuario=user_match)
         else:
-            # Se não encontrou um utilizador exato, faz a busca geral apenas na ação
+            
             logs = logs.filter(acao__icontains=q)
 
     return render(request, "core/motores/historico.html", {"motor": motor, "logs": logs, "q": q})
@@ -201,20 +201,17 @@ def ligar_motor(request, motor_id):
     motor.save()
     LogAcionamento.objects.create(motor=motor, acao="LIGADO", usuario=request.user)
     
-    # Linha modificada para manter a busca
     q = request.POST.get('q', '')
     return redirect(f"{reverse('painel')}?q={q}")
 
 @login_required
 def desligar_motor(request, motor_id):
     mqtt_pub_view("desligar")
-
     motor = get_object_or_404(Motor, id=motor_id)
     motor.ligado = False
     motor.save()
     LogAcionamento.objects.create(motor=motor, acao="DESLIGADO", usuario=request.user)
-    
-    # Linha modificada para manter a busca
+
     q = request.POST.get('q', '')
     return redirect(f"{reverse('painel')}?q={q}")
 
@@ -225,7 +222,7 @@ def iniciar_manutencao(request, motor_id):
     motor.save()
     LogAcionamento.objects.create(motor=motor, acao="MANUTENCAO_INICIO", usuario=request.user)
     
-    # Linha modificada para manter a busca
+    
     q = request.POST.get('q', '')
     return redirect(f"{reverse('painel')}?q={q}")
 
