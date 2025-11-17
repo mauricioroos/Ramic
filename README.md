@@ -196,4 +196,27 @@ Abra o seu navegador e acesse [http://127.0.0.1:8000/](http://127.0.0.1:8000/).
 
 
 
-## 👥 Criadores e Orientador <table> <tr> <td align="center"> <a href="https://github.com/mauricioroos"> <img src="https://github.com/mauricioroos.png" width="115"><br> <sub><b>Mauricio Roos</b></sub> </a> </td> <td align="center"> <a href="https://github.com/IFennecI"> <img src="https://github.com/IFennecI.png" width="115"><br> <sub><b>Kauan</b></sub> </a> </td> <td align="center"> <a href="https://github.com/dbernardos"> <img src="https://github.com/dbernardos.png" width="115"><br> <sub><b>Davi Bernardos</b></sub><br> <sub>(Orientador)</sub> </a> </td> </tr> </table>
+## 👥 Criadores e Orientador
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/mauricioroos">
+        <img src="https://github.com/mauricioroos.png" width="115"><br>
+        <sub><b>Mauricio Roos</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/KauanFruhauf">
+        <img src="https://github.com/KauanFruhauf.png" width="115"><br>
+        <sub><b>Kauan</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/dbernardos">
+        <img src="https://github.com/dbernardos.png" width="115"><br>
+        <sub><b>Davi Bernardos</b></sub><br>
+        <sub>(Orientador)</sub>
+      </a>
+    </td>
+  </tr>
+</table>
