@@ -4,7 +4,7 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = "dev-secret-key-rAMEC-troque-em-producao"
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
@@ -68,7 +68,11 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = "static/"
+#STATIC_ROOT = os.path.join("../", BASE_DIR, "staticfiles")
 STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = BASE_DIR / "staticfiles"
+#STATIC_ROOT = ""
+
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
@@ -80,7 +84,7 @@ LOGOUT_REDIRECT_URL = "login"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # CONFIGURAÇÕES CREDENCIAIS MQTT: DAVI
-MQTT_BROKER = '10.157.74.17'
+MQTT_BROKER = '10.42.0.1'
 MQTT_PORT = 1883
 MQTT_USERNAME = 'ramic'
 MQTT_PASSWORD = '123456'
